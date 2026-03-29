@@ -1,5 +1,6 @@
 package com.tanakaderoy.appledroid
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 
@@ -10,6 +11,12 @@ import android.net.Uri
  * To add a new mapping, add an entry here and implement the logic.
  */
 object RouteMappings {
+
+    const val PACKAGE_GOOGLE_MAPS = "com.google.android.apps.maps"
+    const val PACKAGE_SPOTIFY = "com.spotify.music"
+
+    private fun PackageManager.isInstalled(pkg: String): Boolean =
+        getLaunchIntentForPackage(pkg) != null
 
     private val ROUTES: Map<String, (Uri, PackageManager) -> RouteResult> = mapOf(
         "maps.apple.com"     to ::routeMaps,
@@ -23,9 +30,17 @@ object RouteMappings {
         return handler(uri, pm)
     }
 
-    // Implementations filled in subsequent chunks.
-    private fun routeMaps(uri: Uri, pm: PackageManager): RouteResult =
-        RoutingFallbacks.browser(uri)
+    private fun routeMaps(uri: Uri, pm: PackageManager): RouteResult {
+        val geoUri = MapsUrlParser.parse(uri) ?: return RoutingFallbacks.browser(uri)
+        val mapsIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri)).apply {
+            setPackage(PACKAGE_GOOGLE_MAPS)
+        }
+        return if (pm.isInstalled(PACKAGE_GOOGLE_MAPS)) {
+            RouteResult.LaunchIntent(mapsIntent)
+        } else {
+            RoutingFallbacks.browser(uri)
+        }
+    }
 
     private fun routeMusic(uri: Uri, pm: PackageManager): RouteResult =
         RoutingFallbacks.browser(uri)
