@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Completely invisible — no window, no animation, no title bar -->
-    <style name="Theme.NoDisplay" parent="@android:style/Theme.NoDisplay" />
+    <!--
+        Fully transparent activity theme with no title bar or dim.
+        Unlike Theme.NoDisplay this does NOT require finish() before onResume(),
+        which means background-thread work (e.g. short-link resolution) is safe.
+    -->
+    <style name="Theme.NoDisplay" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 </resources>
