@@ -37,6 +37,24 @@ gradle wrapper --gradle-version 8.11.1
 3. Implement a `*UrlParser` if the URL needs non-trivial parsing.
 4. Add unit tests in `src/test/`.
 
+## Enabling link interception (App Links)
+
+Android requires the domain owner to host a verification file for automatic link handling. Since these are Apple's domains, users must manually enable the app in Settings:
+
+> Settings → Apps → Apple Link Router → Open by default → Supported web addresses → enable all four domains
+
+**Developer shortcut (ADB):** force-enable all domains in one command:
+
+```bash
+adb shell pm set-app-links --package com.tanakaderoy.appledroid 2 \
+  maps.apple.com \
+  music.apple.com \
+  podcasts.apple.com \
+  tv.apple.com
+```
+
+This persists across reinstalls but not a full OS wipe.
+
 ## Manual testing (ADB)
 
 ```bash
