@@ -42,8 +42,19 @@ object RouteMappings {
         }
     }
 
-    private fun routeMusic(uri: Uri, pm: PackageManager): RouteResult =
-        RoutingFallbacks.browser(uri)
+    private fun routeMusic(uri: Uri, pm: PackageManager): RouteResult {
+        val query = MusicUrlParser.parse(uri) ?: return RoutingFallbacks.browser(uri)
+        val spotifyUri = Uri.parse("spotify:search:${Uri.encode(query)}")
+        val spotifyIntent = Intent(Intent.ACTION_VIEW, spotifyUri).apply {
+            setPackage(PACKAGE_SPOTIFY)
+        }
+        return if (pm.isInstalled(PACKAGE_SPOTIFY)) {
+            RouteResult.LaunchIntent(spotifyIntent)
+        } else {
+            val webUri = Uri.parse("https://open.spotify.com/search/${Uri.encode(query)}")
+            RoutingFallbacks.browser(webUri)
+        }
+    }
 
     private fun routePodcasts(uri: Uri, pm: PackageManager): RouteResult =
         RoutingFallbacks.browser(uri)
