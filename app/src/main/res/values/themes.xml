@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Completely invisible — no window, no animation, no title bar -->
+    <style name="Theme.NoDisplay" parent="@android:style/Theme.NoDisplay" />
+</resources>
