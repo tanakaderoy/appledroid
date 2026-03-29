@@ -1,4 +1,4 @@
-package com.example.appledroid
+package com.tanakaderoy.appledroid
 
 import android.content.pm.PackageManager
 import android.net.Uri

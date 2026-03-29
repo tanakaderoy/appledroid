@@ -1,4 +1,4 @@
-package com.example.appledroid
+package com.tanakaderoy.appledroid
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
