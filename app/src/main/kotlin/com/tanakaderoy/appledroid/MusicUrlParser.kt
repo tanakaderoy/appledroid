@@ -25,7 +25,7 @@ object MusicUrlParser {
         // Find the last non-numeric segment before a numeric ID, or just use the last slug.
         val slug = segments
             .dropWhile { it.toLongOrNull() != null } // skip any leading numeric (shouldn't happen)
-            .lastOrNull { it.toLongOrNull() == null && !KNOWN_TYPE_SEGMENTS.contains(it) }
+            .lastOrNull { it.toLongOrNull() == null && !KNOWN_TYPE_SEGMENTS.contains(it) && !it.startsWith("pl.") }
             ?: return null
         return slug.replace('-', ' ').trim().takeIf { it.isNotBlank() }
     }
