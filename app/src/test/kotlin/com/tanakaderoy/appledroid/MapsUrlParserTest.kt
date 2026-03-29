@@ -40,6 +40,16 @@ class MapsUrlParserTest {
         assertEquals("geo:0,0?q=fallback", MapsUrlParser.parse(uri))
     }
 
+    @Test fun `coordinate param (place URLs) produces geo URI`() {
+        val uri = Uri.parse("https://maps.apple.com/place?coordinate=39.943653,-83.078491&name=2988+Sullivant+Ave")
+        assertEquals("geo:39.943653,-83.078491?q=2988%20Sullivant%20Ave", MapsUrlParser.parse(uri))
+    }
+
+    @Test fun `coordinate param without name produces bare geo URI`() {
+        val uri = Uri.parse("https://maps.apple.com/place?coordinate=39.943653,-83.078491")
+        assertEquals("geo:39.943653,-83.078491", MapsUrlParser.parse(uri))
+    }
+
     @Test fun `empty URI returns null`() {
         val uri = Uri.parse("https://maps.apple.com/")
         assertNull(MapsUrlParser.parse(uri))

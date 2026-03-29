@@ -9,17 +9,28 @@ object MapsUrlParser {
      * Returns a `geo:` URI string, or `null` if no usable location data is found.
      *
      * Priority:
-     *  1. `ll` param  → `geo:lat,lon`
-     *  2. `q` param   → `geo:0,0?q=<query>`
-     *  3. `address`   → `geo:0,0?q=<address>`
-     *  4. `auid`      → `geo:0,0?q=<auid>` (place ID — Maps will resolve it)
+     *  1. `ll` or `coordinate` param → `geo:lat,lon` (optionally labelled with `name`)
+     *  2. `q` param                  → `geo:0,0?q=<query>`
+     *  3. `address`                  → `geo:0,0?q=<address>`
+     *  4. `auid`                     → `geo:0,0?q=<auid>` (place ID — Maps will resolve it)
+     *
+     * `maps.apple.com/place` uses `coordinate` + `name` instead of `ll`.
+     * Example: ?coordinate=39.943653,-83.078491&name=2988+Sullivant+Ave
      */
     fun parse(uri: Uri): String? {
-        val ll = uri.getQueryParameter("ll")
-        if (!ll.isNullOrBlank()) {
-            val parts = ll.split(",")
+        // `ll` (classic) and `coordinate` (/place URLs) are both lat,lon pairs.
+        val coords = uri.getQueryParameter("ll") ?: uri.getQueryParameter("coordinate")
+        if (!coords.isNullOrBlank()) {
+            val parts = coords.split(",")
             if (parts.size == 2 && parts.all { it.isNumericCoord() }) {
-                return "geo:${parts[0].trim()},${parts[1].trim()}"
+                val lat = parts[0].trim()
+                val lon = parts[1].trim()
+                val name = uri.getQueryParameter("name")?.trim()
+                return if (!name.isNullOrBlank()) {
+                    "geo:$lat,$lon?q=${Uri.encode(name)}"
+                } else {
+                    "geo:$lat,$lon"
+                }
             }
         }
 

@@ -20,6 +20,7 @@ object RouteMappings {
 
     private val ROUTES: Map<String, (Uri, PackageManager) -> RouteResult> = mapOf(
         "maps.apple.com"     to ::routeMaps,
+        "maps.apple"         to ::routeMaps, // short links redirect to maps.apple.com/place
         "music.apple.com"    to ::routeMusic,
         "podcasts.apple.com" to ::routePodcasts,
         "tv.apple.com"       to ::routeTv,

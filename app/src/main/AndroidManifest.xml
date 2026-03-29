@@ -19,6 +19,14 @@
                 <data android:scheme="https" android:host="maps.apple.com" />
             </intent-filter>
 
+            <!-- maps.apple short links (e.g. maps.apple/p/N7PT9JJnRGtVyi) -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="maps.apple" />
+            </intent-filter>
+
             <!-- music.apple.com -->
             <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
