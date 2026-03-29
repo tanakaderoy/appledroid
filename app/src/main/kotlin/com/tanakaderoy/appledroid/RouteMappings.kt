@@ -56,9 +56,22 @@ object RouteMappings {
         }
     }
 
-    private fun routePodcasts(uri: Uri, pm: PackageManager): RouteResult =
-        RoutingFallbacks.browser(uri)
+    private fun routePodcasts(uri: Uri, pm: PackageManager): RouteResult {
+        // Extract show/episode name from path for a web search fallback.
+        // Path shape: /us/podcast/{show-slug}/id{numeric} or /us/podcast/{show-slug}
+        val segments = uri.pathSegments.filter { it.isNotBlank() }
+        val slug = segments
+            .filterNot { it == "podcast" || it.startsWith("id") && it.drop(2).toLongOrNull() != null }
+            .lastOrNull { it.toLongOrNull() == null }
+        return if (slug != null) {
+            val query = slug.replace('-', ' ')
+            RoutingFallbacks.webSearch("$query podcast")
+        } else {
+            RoutingFallbacks.browser(uri)
+        }
+    }
 
     private fun routeTv(uri: Uri, pm: PackageManager): RouteResult =
+        // No direct Android equivalent; pass through to browser.
         RoutingFallbacks.browser(uri)
 }
