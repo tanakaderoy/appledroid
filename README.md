@@ -41,12 +41,13 @@ gradle wrapper --gradle-version 8.11.1
 
 Android requires the domain owner to host a verification file for automatic link handling. Since these are Apple's domains, users must manually enable the app in Settings:
 
-> Settings → Apps → Apple Link Router → Open by default → Supported web addresses → enable all four domains
+> Settings → Apps → Apple Link Router → Open by default → Supported web addresses → enable all five domains
 
 **Developer shortcut (ADB):** force-enable all domains in one command:
 
 ```bash
 adb shell pm set-app-links --package com.tanakaderoy.appledroid 2 \
+  maps.apple \
   maps.apple.com \
   music.apple.com \
   podcasts.apple.com \
